@@ -7,8 +7,8 @@ authors = ["ed1th"]
 categories = ["encoding", "multimedia::audio"]
 keywords = ["wwise", "wem", "vorbis", "audio"]
 readme = "README.md"
-license.workspace = true
-repository.workspace = true
+license = "AGPL-3.0-or-later"
+repository = "https://github.com/LambdaEd1th/wem-audio"
 description = "Pure Rust readers, writers, and converters for Audiokinetic Wwise WEM audio"
 
 [features]
@@ -19,11 +19,14 @@ aac = ["wav", "dep:symphonia"]
 transcode = ["wav", "vorbis", "aac", "dep:symphonia", "dep:tempfile"]
 
 [dependencies]
-byteorder = { workspace = true, optional = true }
-hound = { workspace = true, optional = true }
-ogg = { workspace = true, optional = true }
-symphonia = { workspace = true, optional = true }
-thiserror = { workspace = true }
+byteorder = { version = "1.5", optional = true }
+hound = { version = "3.5", optional = true }
+ogg = { version = "0.9.2", optional = true }
+symphonia = { version = "0.6", default-features = false, features = ["aac", "isomp4", "ogg", "vorbis"], optional = true }
+thiserror = "2"
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 tempfile = { version = "3.25", optional = true }
+
+[package.metadata.docs.rs]
+all-features = true

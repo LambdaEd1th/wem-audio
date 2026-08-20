@@ -3,6 +3,13 @@
 `wem-audio` is the reusable Wwise WEM audio library used by Ed1th's PvZ
 Toolkit. It does not depend on the Toolkit UI or a command-line program.
 
+## Installation
+
+```toml
+[dependencies]
+wem-audio = { git = "https://github.com/LambdaEd1th/wem-audio" }
+```
+
 Supported conversion paths:
 
 - Wwise Vorbis WEM to standard Ogg Vorbis
@@ -47,6 +54,9 @@ Plants vs. Zombies 2 WEM files commonly use the aoTuV 6.03 packed codebooks.
 Use `CodebookLibrary::aotuv_603()` for those files. Embedded codebook sets are
 borrowed static data, and cloning a library does not duplicate the codebooks.
 
-The crate is licensed under `AGPL-3.0-or-later`.
+## License
+
+AGPL-3.0-or-later. See [LICENSE](LICENSE).
+
 See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for ww2ogg and
 embedded-codebook attribution.
