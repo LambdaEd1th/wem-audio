@@ -47,12 +47,11 @@ pub fn process_pcm<R: Read + Seek, W: Write + Seek>(
             if !buffer.len().is_multiple_of(2) {
                 return Err(WemError::parse("16-bit PCM payload has a trailing byte"));
             }
-            for bytes in buffer.chunks_exact(2) {
-                let bytes = [bytes[0], bytes[1]];
+            for bytes in buffer.as_chunks::<2>().0 {
                 let sample = if params.is_little_endian {
-                    i16::from_le_bytes(bytes)
+                    i16::from_le_bytes(*bytes)
                 } else {
-                    i16::from_be_bytes(bytes)
+                    i16::from_be_bytes(*bytes)
                 };
                 wav_writer.write_sample(sample).map_err(WemError::Wav)?;
             }
@@ -61,7 +60,7 @@ pub fn process_pcm<R: Read + Seek, W: Write + Seek>(
             if !buffer.len().is_multiple_of(3) {
                 return Err(WemError::parse("24-bit PCM payload is not sample-aligned"));
             }
-            for bytes in buffer.chunks_exact(3) {
+            for bytes in buffer.as_chunks::<3>().0 {
                 let value = if params.is_little_endian {
                     u32::from(bytes[0]) | (u32::from(bytes[1]) << 8) | (u32::from(bytes[2]) << 16)
                 } else {
@@ -75,12 +74,11 @@ pub fn process_pcm<R: Read + Seek, W: Write + Seek>(
             if !buffer.len().is_multiple_of(4) {
                 return Err(WemError::parse("32-bit PCM payload is not sample-aligned"));
             }
-            for bytes in buffer.chunks_exact(4) {
-                let bytes = [bytes[0], bytes[1], bytes[2], bytes[3]];
+            for bytes in buffer.as_chunks::<4>().0 {
                 let sample = if params.is_little_endian {
-                    i32::from_le_bytes(bytes)
+                    i32::from_le_bytes(*bytes)
                 } else {
-                    i32::from_be_bytes(bytes)
+                    i32::from_be_bytes(*bytes)
                 };
                 wav_writer.write_sample(sample).map_err(WemError::Wav)?;
             }

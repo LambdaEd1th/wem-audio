@@ -460,12 +460,11 @@ impl<R: Read + Seek> VorbisWemDecoder<R> {
         let mut packet_writer = PacketWriter::new(output);
         let serial = 0x80000001; // Random serial or fixed
 
-        let mode_blockflag: Option<Vec<bool>>;
         let mut mode_bits = 0i32;
 
         let mut prev_blockflag = false;
 
-        if self.header_triad_present {
+        let mode_blockflag = if self.header_triad_present {
             let expected_types = [1_u8, 3, 5];
             let mut offset = data_offset
                 .checked_add(u64::from(self.setup_packet_offset))
@@ -509,7 +508,7 @@ impl<R: Read + Seek> VorbisWemDecoder<R> {
                     "header triad does not end at the first audio packet offset",
                 ));
             }
-            mode_blockflag = None;
+            None
         } else {
             let id_data = self.generate_identification_packet()?;
             packet_writer.write_packet(id_data, serial, PacketWriteEndInfo::EndPage, 0)?;
@@ -523,8 +522,8 @@ impl<R: Read + Seek> VorbisWemDecoder<R> {
             if !mb_flag.is_empty() {
                 mode_bits = ilog(mb_flag.len() as u32 - 1) as i32;
             }
-            mode_blockflag = Some(mb_flag);
-        }
+            Some(mb_flag)
+        };
 
         // For granule calculation
         let (blocksize_0, blocksize_1) = if self.no_granule {
